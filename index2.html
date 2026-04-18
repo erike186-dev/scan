@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For Phoo, With All My Love</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Great+Vibes&family=Manrope:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --sky-top: #ffb1cc;
+        --sky-mid: #ff8fbc;
+        --sky-bottom: #ff6f9f;
+        --sun: #ffd6a0;
+        --mist: rgba(255, 240, 246, 0.28);
+        --white: #fff8fb;
+        --soft: rgba(255, 248, 251, 0.82);
+        --card: rgba(77, 17, 48, 0.24);
+        --border: rgba(255, 255, 255, 0.22);
+        --glow: rgba(255, 225, 236, 0.8);
+        --shadow: 0 20px 70px rgba(88, 12, 49, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: "Manrope", sans-serif;
+        color: var(--white);
+        background:
+          radial-gradient(circle at 50% 18%, rgba(255, 214, 160, 0.95), rgba(255, 214, 160, 0.18) 16%, transparent 28%),
+          linear-gradient(180deg, var(--sky-top), var(--sky-mid) 45%, var(--sky-bottom) 100%);
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: auto;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::before {
+        left: -10vw;
+        right: -10vw;
+        bottom: 22vh;
+        height: 18vh;
+        background: linear-gradient(180deg, transparent, var(--mist));
+        filter: blur(24px);
+      }
+
+      body::after {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 38vh;
+        background:
+          polygon(0 100%, 0 55%, 10% 68%, 22% 42%, 34% 74%, 46% 34%, 58% 76%, 72% 39%, 84% 67%, 100% 48%, 100% 100%);
+        background-color: rgba(71, 13, 46, 0.78);
+        clip-path: polygon(0 100%, 0 55%, 10% 68%, 22% 42%, 34% 74%, 46% 34%, 58% 76%, 72% 39%, 84% 67%, 100% 48%, 100% 100%);
+      }
+
+      .backdrop {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .floating-line,
+      .reaction {
+        position: absolute;
+        will-change: transform, opacity;
+      }
+
+      .floating-line {
+        left: -35%;
+        font-family: "Great Vibes", cursive;
+        font-size: clamp(1.8rem, 3.5vw, 3.2rem);
+        color: rgba(255, 246, 250, 0.84);
+        text-shadow:
+          0 0 12px rgba(255, 255, 255, 0.45),
+          0 0 30px rgba(255, 200, 220, 0.45);
+        white-space: nowrap;
+        animation: driftWords linear infinite;
+      }
+
+      .reaction {
+        font-size: clamp(16px, 2vw, 28px);
+        text-shadow: 0 0 20px rgba(255, 116, 170, 0.55);
+        animation: riseReaction linear infinite;
+        opacity: 0;
+      }
+
+      .scene {
+        position: fixed;
+        inset: auto 0 0;
+        height: 42vh;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .mountain {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        clip-path: polygon(0 100%, 0 72%, 12% 48%, 24% 74%, 34% 35%, 46% 78%, 55% 50%, 66% 82%, 78% 40%, 90% 70%, 100% 54%, 100% 100%);
+      }
+
+      .mountain.back {
+        background: rgba(112, 33, 83, 0.42);
+        transform: translateY(14px) scale(1.04);
+      }
+
+      .mountain.front {
+        background: rgba(61, 12, 41, 0.82);
+      }
+
+      .content {
+        position: relative;
+        z-index: 2;
+        width: min(980px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 44px 0 80px;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        align-items: center;
+      }
+
+      .card {
+        padding: 34px;
+        border-radius: 32px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), var(--card));
+        border: 1px solid var(--border);
+        backdrop-filter: blur(18px);
+        box-shadow: var(--shadow);
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        color: var(--white);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "Great Vibes", cursive;
+        font-size: clamp(4rem, 9vw, 7rem);
+        line-height: 0.95;
+        font-weight: 400;
+        text-shadow:
+          0 0 18px rgba(255, 241, 247, 0.4),
+          0 0 42px rgba(255, 193, 217, 0.45);
+      }
+
+      .glow-line {
+        margin: 18px 0 0;
+        font-family: "Cinzel", serif;
+        font-size: clamp(1rem, 2vw, 1.35rem);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--glow);
+        text-shadow:
+          0 0 10px rgba(255, 255, 255, 0.35),
+          0 0 24px rgba(255, 219, 232, 0.45);
+        animation: pulseText 3s ease-in-out infinite;
+      }
+
+      .lead {
+        margin: 20px 0 0;
+        max-width: 32ch;
+        font-size: clamp(1.1rem, 2vw, 1.4rem);
+        line-height: 1.8;
+        color: var(--soft);
+      }
+
+      .essay {
+        margin-top: 28px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .essay p {
+        margin: 0;
+        font-size: clamp(1rem, 1.5vw, 1.15rem);
+        line-height: 1.95;
+        color: rgba(255, 248, 251, 0.9);
+      }
+
+      .essay strong {
+        color: #fff1f7;
+      }
+
+      .music-box {
+        margin-top: 28px;
+        padding: 20px 22px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .music-box h2 {
+        margin: 0 0 10px;
+        font-family: "Cinzel", serif;
+        font-size: 1rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .music-box p {
+        margin: 0 0 14px;
+        color: rgba(255, 248, 251, 0.78);
+        line-height: 1.7;
+      }
+
+      audio {
+        width: 100%;
+      }
+
+      .bg-music {
+        display: none;
+      }
+
+      .music-start {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 5;
+        display: none;
+        padding: 12px 18px;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(122, 19, 72, 0.88);
+        color: #fff8fb;
+        font: inherit;
+        font-weight: 700;
+        box-shadow: 0 12px 30px rgba(85, 8, 49, 0.28);
+        cursor: pointer;
+      }
+
+      .music-start.show {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .footer {
+        margin-top: 22px;
+        text-align: center;
+        color: rgba(255, 248, 251, 0.68);
+      }
+
+      @keyframes driftWords {
+        0% {
+          transform: translateX(0) translateY(0) scale(0.92);
+          opacity: 0;
+        }
+        12%,
+        82% {
+          opacity: 0.95;
+        }
+        100% {
+          transform: translateX(160vw) translateY(var(--float-y)) scale(1.08);
+          opacity: 0;
+        }
+      }
+
+      @keyframes riseReaction {
+        0% {
+          transform: translate3d(0, 10vh, 0) scale(0.8) rotate(0deg);
+          opacity: 0;
+        }
+        20% {
+          opacity: 0.95;
+        }
+        100% {
+          transform: translate3d(var(--drift-x), -110vh, 0) scale(1.25) rotate(18deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes pulseText {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.9;
+        }
+        50% {
+          transform: scale(1.04);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .content {
+          width: min(100% - 18px, 980px);
+          padding-top: 20px;
+        }
+
+        .card {
+          padding: 24px;
+        }
+
+        .lead {
+          max-width: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+    <button class="music-start" id="musicStart" type="button">Play Our Song</button>
+    <div class="scene" aria-hidden="true">
+      <div class="mountain back"></div>
+      <div class="mountain front"></div>
+    </div>
+
+    <main class="content">
+      <section class="hero">
+        <article class="card">
+          <div class="tag">For Phoo</div>
+          <h1>My Love Feels Like A Movie</h1>
+          <p class="glow-line">Every scene in my heart belongs to you</p>
+          <p class="lead">
+            If love could become a sky, it would be this pink evening. If love could become
+            a story, it would be the story of me finding Phoo and never wanting the scene to end.
+          </p>
+
+          <div class="essay">
+            <p>
+              <strong>Phoo,</strong> I know our story started online, and maybe to other people
+              that might sound simple, but to me it has felt special from the beginning. Even
+              through a screen, your presence felt gentle and real. Little by little, through
+              our chats, your words, your kindness, and the way you carry yourself, I started
+              to care about you more than I expected. It was not loud at first. It was soft,
+              quiet, and honest. It grew in the small moments, and that is why it feels real
+              to me now.
+            </p>
+            <p>
+              I care about you because you bring a calm feeling into my heart. When I think of
+              you, I do not only think about romance. I think about your smile, your energy,
+              and the comfort of knowing there is someone like you in this world. You have a
+              way of making ordinary moments feel warm. Even a short conversation with you can
+              stay in my mind for a long time. That is something rare, and I do not take it
+              lightly.
+            </p>
+            <p>
+              What I feel for you is not just about big words. It is about sincerity. It is
+              about caring how your day went, hoping you are okay, and smiling when I see your
+              name. Even though we met online, the feelings are still meaningful to me. Maybe
+              that is the beautiful part of it. A real connection can begin anywhere, and ours
+              began with simple messages that slowly became something my heart looks forward to.
+            </p>
+            <p>
+              If this page feels like a movie, it is because meeting you made my world feel a
+              little brighter. Not because everything suddenly became perfect, but because you
+              gave my heart someone beautiful to think about. You became a lovely part of my
+              days, and I wanted you to know that your place in my heart is gentle, sincere,
+              and true.
+            </p>
+            <p>
+              So this is my honest truth: I care about you, Phoo. I care about your happiness,
+              your peace, your smile, and the little things that make you who you are. Maybe
+              our story is still young and maybe it began online, but that does not make what I
+              feel less real. It only makes me appreciate it more, because from something so
+              simple, my heart found someone worth caring for in a real way.
+            </p>
+            <p>
+              A poem for Phoo:
+              We met through a quiet glowing screen,
+              yet something real was there between.
+              A little care became so true,
+              and softly led my heart to you.
+              In pink sky light my thoughts still say,
+              Phoo, you brighten up my day.
+            </p>
+          </div>
+
+          <div class="music-box">
+            <h2>Romance Song</h2>
+            <p>The song now plays softly in the background for Phoo.</p>
+            <audio class="bg-music" id="bgMusic" autoplay loop preload="auto" playsinline>
+              <source src="Ed Sheeran - Perfect.mp3" type="audio/mpeg" />
+              Your browser does not support audio.
+            </audio>
+          </div>
+
+          <p class="footer">Pink sky, mountain dreams, and love flying everywhere for Phoo.</p>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const loveLines = [
+        "Phoo, you are my forever",
+        "I love you more than words can hold",
+        "My heart always runs to Phoo",
+        "You are my favorite beautiful feeling",
+        "Every dream of mine has your name in it",
+        "Phoo is the love story of my life",
+        "With you, my world turns into magic"
+      ];
+
+      const reactions = ["❤", "💕", "💖", "💘", "💞", "🌸", "✨"];
+      const backdrop = document.getElementById("backdrop");
+      const bgMusic = document.getElementById("bgMusic");
+      const musicStart = document.getElementById("musicStart");
+
+      function makeFloatingLines() {
+        for (let i = 0; i < 12; i += 1) {
+          const line = document.createElement("span");
+          line.className = "floating-line";
+          line.textContent = loveLines[i % loveLines.length];
+          line.style.top = `${8 + Math.random() * 58}vh`;
+          line.style.setProperty("--float-y", `${-28 + Math.random() * 56}px`);
+          line.style.animationDuration = `${14 + Math.random() * 14}s`;
+          line.style.animationDelay = `${Math.random() * -20}s`;
+          backdrop.appendChild(line);
+        }
+      }
+
+      function makeReactions() {
+        for (let i = 0; i < 28; i += 1) {
+          const reaction = document.createElement("span");
+          reaction.className = "reaction";
+          reaction.textContent = reactions[i % reactions.length];
+          reaction.style.left = `${Math.random() * 100}vw`;
+          reaction.style.bottom = `${-8 - Math.random() * 26}vh`;
+          reaction.style.setProperty("--drift-x", `${-18 + Math.random() * 36}vw`);
+          reaction.style.animationDuration = `${9 + Math.random() * 10}s`;
+          reaction.style.animationDelay = `${Math.random() * -16}s`;
+          backdrop.appendChild(reaction);
+        }
+      }
+
+      makeFloatingLines();
+      makeReactions();
+
+      if (bgMusic) {
+        bgMusic.volume = 0.14;
+        const startMusic = () =>
+          bgMusic
+            .play()
+            .then(() => {
+              if (musicStart) {
+                musicStart.classList.remove("show");
+              }
+            })
+            .catch(() => {
+              if (musicStart) {
+                musicStart.classList.add("show");
+              }
+            });
+
+        startMusic();
+
+        if (musicStart) {
+          musicStart.addEventListener("click", () => {
+            startMusic();
+          });
+        }
+
+        document.addEventListener(
+          "click",
+          () => {
+            if (bgMusic.paused) {
+              startMusic();
+            }
+          },
+          { once: true }
+        );
+      }
+    </script>
+  </body>
+</html>
